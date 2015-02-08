@@ -1,6 +1,6 @@
 
 # Function for loading a smaller interval from a dataset in a CSV.
-# The csv must contain columns name "Date" and "Time"
+# The csv must contain columns "Date" and "Time"
 # in the following format: %d/%m/%Y and %H:%M:%S
 loadIntervalCSV <- function (pathToCsv, firstDay, nDays = 1) {
   # Load first row
@@ -35,22 +35,56 @@ loadIntervalCSV <- function (pathToCsv, firstDay, nDays = 1) {
 # Load 2007-02-01 and 2007-02-02
 dataSet <- loadIntervalCSV("household_power_consumption.txt", "01/02/2007", nDays = 2)
 
-# Set bg color transparent
-par(bg = "transparent")
-
 # Start device
-png(file = "plot2.png")
+png(file = "plot4.png")
 
 # Adjust Locale
 #Sys.setlocale("LC_TIME", "en_US.utf8")
 
-# Draw plot 2
+# Creates a Datetime column in dataset
+dataSet$Datetime = as.POSIXct(paste(dataSet$Date, dataSet$Time), 
+                              format = "%d/%m/%Y %H:%M:%S"))
+
+# Let plot region to allow 4 graphs and set bg color
+par(mfcol = c(2,2), bg = "transparent")
+
+# Plot top-left
 with(dataSet, 
-  plot(Global_active_power ~ as.POSIXct(paste(Date, Time), format="%d/%m/%Y %H:%M:%S"),
-       ylab="Global Active Power (kilowatts)",
-       xlab="",
-       type="l")
+  # Draw plot 1
+  plot(Global_active_power ~ Datetime, type="l", xlab="",
+       ylab="Global Active Power")
 )
+
+# Plot bottom-left
+with(dataSet, {
+  plot(Sub_metering_1 ~ Datetime,
+       ylab = "Energy sub metering",
+       xlab = "",
+       type = "l",
+       col  = "black")
+  lines(Sub_metering_2 ~ Datetime, col = "red")
+  lines(Sub_metering_3 ~ Datetime, col = "blue")
+  legend("topright", lty = "solid", col = c("black", "red", "blue"), 
+       legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"),
+       box.lwd = 0)
+})
+
+# Plot top-right
+with(dataSet, {
+  plot(Voltage ~ Datetime,
+       ylab="Voltage",
+       xlab="datetime",
+       type="l")
+})
+
+# Plot bottom-right
+with(dataSet, {
+  plot(Global_reactive_power ~ Datetime,
+       ylab="Global_reactive_power",
+       xlab="datetime",
+       type="l")
+})
+
 
 # Close the device
 dev.off()

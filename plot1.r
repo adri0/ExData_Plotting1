@@ -1,6 +1,6 @@
 
 # Function for loading a smaller interval from a dataset in a CSV.
-# The csv must contain columns name "Date" and "Time"
+# The csv must contain columns "Date" and "Time"
 # in the following format: %d/%m/%Y and %H:%M:%S
 loadIntervalCSV <- function (pathToCsv, firstDay, nDays = 1) {
   # Load first row
@@ -34,6 +34,9 @@ loadIntervalCSV <- function (pathToCsv, firstDay, nDays = 1) {
 
 # Load 2007-02-01 and 2007-02-02
 dataSet <- loadIntervalCSV("household_power_consumption.txt", "01/02/2007", nDays = 2)
+
+# Set bg color transparent
+par(bg = "transparent")
 
 # Start device
 png(file = "plot1.png")

@@ -38,30 +38,27 @@ dataSet <- loadIntervalCSV("household_power_consumption.txt", "01/02/2007", nDay
 # Start device
 png(file = "plot3.png")
 
-# Adjust Locale
-Sys.setlocale("LC_TIME", "en_US.utf8")
+# Set bg color transparent
+par(bg = "transparent")
 
-# Introduces a Datetime column in dataset
+# Adjust Locale
+#Sys.setlocale("LC_TIME", "en_US.utf8")
+
+# Creates a Datetime column in dataset
 dataSet$Datetime = as.POSIXct(paste(dataSet$Date, dataSet$Time), 
                               format="%d/%m/%Y %H:%M:%S")
 
 # Draw plot
 with(dataSet, {
   plot(Sub_metering_1 ~ Datetime,
-       ylab="Energy sub metering",
-       xlab="",
-       type="l",
-       col="black")
-  lines(Sub_metering_2 ~ Datetime,
-       ylab="Energy sub metering",
-       xlab="",
-       col="red")
-  lines(Sub_metering_3 ~ Datetime,
-        ylab="Energy sub metering",
-        xlab="",
-        col="blue")
+       ylab = "Energy sub metering",
+       xlab = "",
+       type = "l",
+       col = "black")
+  lines(Sub_metering_2 ~ Datetime, col = "red")
+  lines(Sub_metering_3 ~ Datetime, col = "blue")
 })
-legend("topright", lty="solid", col = c("black", "red", "blue"), 
+legend("topright", lty = "solid", col = c("black", "red", "blue"), 
        legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
 
 # Close the device
